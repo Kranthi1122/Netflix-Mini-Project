@@ -1,0 +1,94 @@
+.main-bg {
+  background-image: url('https://res.cloudinary.com/dk2sgowxz/image/upload/v1678855897/netfilx_1_fqsdub.png');
+  height: 100vh;
+  background-size: cover;
+  display: flex;
+  justify-content: flex-start;
+
+  width: 100vw;
+}
+.login {
+  position: absolute;
+  width: 456px;
+  height: 440px;
+  left: 492px;
+  /* top: 292px; */
+  background: #0c0b10;
+  opacity: 0.8;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  align-self: center;
+}
+.loginheader {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 40px;
+  color: #ffffff;
+  top: 350px;
+}
+label {
+  font-family: 'HK Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+  /* identical to box height, or 133% */
+
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  color: #ffffff;
+  align-self: flex-start;
+  margin-left: 20px;
+  margin-bottom: 7px;
+}
+input {
+  background: #333333;
+  border-radius: 2px;
+  width: 380px;
+  height: 30px;
+  font-family: 'HK Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  /* identical to box height, or 171% */
+
+  /* Light / blue-gray / 200 */
+
+  color: #e2e8f0;
+}
+.loginButton {
+  background: #e50914;
+  border-radius: 8px;
+  margin-top: 40px;
+  width: 380px;
+  height: 35px;
+  color: #ffffff;
+  font-family: 'HK Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.05em;
+}
+.error {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+
+  /* Light / red / 600 */
+
+  color: #dc2626;
+}
+.main-heading {
+  margin: 30px;
+  align-self: flex-start;
+}
