@@ -1,15 +1,11 @@
 import {Component} from 'react'
-
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
-// import {Link} from 'react-router-dom'
-// import {AiOutlineClose} from 'react-icons/ai'
-import HomePoster from '../HomePoster'
-import Header from '../Header'
+import {Link} from 'react-router-dom'
 import './index.css'
+
 import FailureView from '../FailureView'
-import TrendingNow from '../TrendingNow'
-import Originals from '../Originals'
+import Header from '../Header'
 import Footer from '../Footer'
 
 const apiStatusConstants = {
@@ -19,22 +15,22 @@ const apiStatusConstants = {
   inProgress: 'IN_PROGRESS',
 }
 
-class Home extends Component {
+class Popular extends Component {
   state = {
-    initialPoster: {},
+    popularMovies: [],
     apiStatus: apiStatusConstants.initial,
   }
 
   componentDidMount() {
-    this.getHomePagePoster()
+    this.getPopularMovies()
   }
 
-  getHomePagePoster = async () => {
+  getPopularMovies = async () => {
     this.setState({
       apiStatus: apiStatusConstants.inProgress,
     })
     const jwtToken = Cookies.get('jwt_token')
-    const apiUrl = `https://apis.ccbp.in/movies-app/originals`
+    const apiUrl = `https://apis.ccbp.in/movies-app/popular-movies`
     const options = {
       method: 'GET',
       headers: {
@@ -46,19 +42,16 @@ class Home extends Component {
     if (response.ok === true) {
       const data = await response.json()
       // console.log(data)
-      const fetchedDataLength = data.results.length
-      const randomPoster =
-        data.results[Math.floor(Math.random() * fetchedDataLength)]
-      const updatedData = {
-        id: randomPoster.id,
-        backdropPath: randomPoster.backdrop_path,
-        title: randomPoster.title,
-        overview: randomPoster.overview,
-        posterPath: randomPoster.poster_path,
-      }
+      const updatedData = data.results.map(each => ({
+        posterPath: each.poster_path,
+        backdropPath: each.backdrop_path,
+        id: each.id,
+        overview: each.overview,
+        title: each.title,
+      }))
       // console.log(updatedData)
       this.setState({
-        initialPoster: {...updatedData},
+        popularMovies: updatedData,
         apiStatus: apiStatusConstants.success,
       })
     } else {
@@ -69,7 +62,7 @@ class Home extends Component {
   }
 
   onRetry = () => {
-    this.getHomePagePoster()
+    this.getPopularMovies()
   }
 
   renderFailureView = () => <FailureView onRetry={this.onRetry} />
@@ -87,16 +80,28 @@ class Home extends Component {
   )
 
   renderSuccessView = () => {
-    const {initialPoster} = this.state
+    const {popularMovies} = this.state
     return (
       <>
-        {/* <p className="json">{JSON.stringify(homeVideos)}</p> */}
-        <HomePoster poster={initialPoster} />
+        <h1 className="explore-movies-here">Explore the Popular Movies Here</h1>
+        <ul className="popular-ul-container">
+          {popularMovies.map(each => (
+            <Link to={`/movies/${each.id}`} key={each.id}>
+              <li className="popular-li-item" key={each.id}>
+                <img
+                  className="popular-poster"
+                  src={each.posterPath}
+                  alt={each.title}
+                />
+              </li>
+            </Link>
+          ))}
+        </ul>
       </>
     )
   }
 
-  renderHomePoster = () => {
+  renderPopularMovies = () => {
     const {apiStatus} = this.state
     switch (apiStatus) {
       case apiStatusConstants.success:
@@ -113,22 +118,14 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="root-container">
+      <div className="main-popular-bg-black-container">
         <Header />
-        <div className="home-sizes-container">{this.renderHomePoster()}</div>
-        <div>
-          <div>
-            <h1 className="trending-now-heading">Trending Now</h1>
-            <TrendingNow />
-          </div>
-          <div>
-            <h1 className="originals-heading">Originals</h1>
-            <Originals />
-          </div>
+        <div className="popular-result-container">
+          {this.renderPopularMovies()}
         </div>
         <Footer />
       </div>
     )
   }
 }
-export default Home
+export default Popular

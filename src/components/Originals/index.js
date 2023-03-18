@@ -1,16 +1,10 @@
 import {Component} from 'react'
-
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
-// import {Link} from 'react-router-dom'
-// import {AiOutlineClose} from 'react-icons/ai'
-import HomePoster from '../HomePoster'
-import Header from '../Header'
+import SlickMovieCard from '../SlickMovieCard'
+
 import './index.css'
 import FailureView from '../FailureView'
-import TrendingNow from '../TrendingNow'
-import Originals from '../Originals'
-import Footer from '../Footer'
 
 const apiStatusConstants = {
   initial: 'INITIAL',
@@ -19,17 +13,17 @@ const apiStatusConstants = {
   inProgress: 'IN_PROGRESS',
 }
 
-class Home extends Component {
+class Originals extends Component {
   state = {
-    initialPoster: {},
+    originals: [],
     apiStatus: apiStatusConstants.initial,
   }
 
   componentDidMount() {
-    this.getHomePagePoster()
+    this.getOriginals()
   }
 
-  getHomePagePoster = async () => {
+  getOriginals = async () => {
     this.setState({
       apiStatus: apiStatusConstants.inProgress,
     })
@@ -46,19 +40,14 @@ class Home extends Component {
     if (response.ok === true) {
       const data = await response.json()
       // console.log(data)
-      const fetchedDataLength = data.results.length
-      const randomPoster =
-        data.results[Math.floor(Math.random() * fetchedDataLength)]
-      const updatedData = {
-        id: randomPoster.id,
-        backdropPath: randomPoster.backdrop_path,
-        title: randomPoster.title,
-        overview: randomPoster.overview,
-        posterPath: randomPoster.poster_path,
-      }
+      const updatedData = data.results.map(each => ({
+        id: each.id,
+        posterPath: each.poster_path,
+        title: each.title,
+      }))
       // console.log(updatedData)
       this.setState({
-        initialPoster: {...updatedData},
+        originals: updatedData,
         apiStatus: apiStatusConstants.success,
       })
     } else {
@@ -69,7 +58,7 @@ class Home extends Component {
   }
 
   onRetry = () => {
-    this.getHomePagePoster()
+    this.getOriginals()
   }
 
   renderFailureView = () => <FailureView onRetry={this.onRetry} />
@@ -87,16 +76,18 @@ class Home extends Component {
   )
 
   renderSuccessView = () => {
-    const {initialPoster} = this.state
+    const {originals} = this.state
     return (
       <>
-        {/* <p className="json">{JSON.stringify(homeVideos)}</p> */}
-        <HomePoster poster={initialPoster} />
+        {/* <p className="json">{JSON.stringify(trendingNow)}</p> */}
+        {/* <HomeVideos homeVideos={homeVideos} /> */}
+
+        <SlickMovieCard movies={originals} />
       </>
     )
   }
 
-  renderHomePoster = () => {
+  renderOriginals = () => {
     const {apiStatus} = this.state
     switch (apiStatus) {
       case apiStatusConstants.success:
@@ -113,22 +104,8 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="root-container">
-        <Header />
-        <div className="home-sizes-container">{this.renderHomePoster()}</div>
-        <div>
-          <div>
-            <h1 className="trending-now-heading">Trending Now</h1>
-            <TrendingNow />
-          </div>
-          <div>
-            <h1 className="originals-heading">Originals</h1>
-            <Originals />
-          </div>
-        </div>
-        <Footer />
-      </div>
+      <div className="trending-now-container">{this.renderOriginals()}</div>
     )
   }
 }
-export default Home
+export default Originals
